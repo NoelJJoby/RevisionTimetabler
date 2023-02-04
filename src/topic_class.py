@@ -18,7 +18,7 @@ class Topic():
     def __str__(self) -> str:
         return f"""
         {self.name.capitalize()}
-        Diff. -- {self.difficulty}
+        Diff. -- {self.difficulty*DIFF_MOD}
         Last  -- {self.last}
         Total -- {self.total}
         ~~~~~~~~~~~~~~~~~~~~~

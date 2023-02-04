@@ -13,32 +13,6 @@ class TopicIterator():
         self.name = name
         self.calender = calender
 
-    def __iter__(self) -> Self:
-        self.pos: int = -1
-        return self
-
-    def __next__(self) -> Topic:
-        """
-        Iterates over each topic
-        at each iteration calls that topic's revise func.
-        """
-        self.topics.sort(key=lambda x: x.score)
-        if len(self.topics) == 0:
-            print("No topics")
-            raise StopIteration
-
-        if self.pos == len(self.topics) - 1:  # 2
-            self.topics[self.pos].revise(
-                float(input("New Difficulty 1-10 (10=easy):\n")))
-            raise StopIteration
-
-        if self.pos != -1:
-            self.topics[self.pos].revise(
-                float(input("New Difficulty 1-10 (10=easy):\n")))
-
-        self.pos += 1
-        return self.topics[self.pos]
-
     def get_topic_name(self, pos: int) -> str | None:
         return None if pos > len(self.topics)-1 else self.topics[pos].name
 
@@ -79,11 +53,17 @@ if __name__ == "__main__":
     x.add_new_topics()
     x.schedule_topics()
     cont: bool = input("Enter Y to display first topic [Y/N]") == "Y"
-    for topic in x:
-        cont = input("Enter Y to display next topic [Y/N]") == "Y"
+    for topic in x.topics:
+
+
         if not (cont):
             break
+
         print(topic)
+        input("finished")
+        topic.revise(float(input("New Difficulty 1-10 (10=easy):\n")))
+        cont = input("Enter Y to display next topic [Y/N]") == "Y"
+    x.topics.sort(key=lambda x: x.score)
 
     input("close [ENTER]")
     x.close_scheduler()
