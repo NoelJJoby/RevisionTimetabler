@@ -19,14 +19,10 @@ class TopicIterator():
     def get_topic_score(self, pos: int) -> float | None:
         return None if pos > len(self.topics)-1 else self.topics[pos].score
 
-    def add_new_topics(self) -> None:
+    def add_new_topics(self, name:str, difficulty:float) -> None:
         # add new topics
-        while True:
-            name: str = input("Next Topic: [STOP/name]\n")
-            if name == "STOP":
-                break
-            difficulty: float = float(input("Difficulty 1-10 (10=easy):\n"))
-            self.topics.append(Topic(name, difficulty))
+        self.topics.append(Topic(name, difficulty))
+        self.topics.sort(key=lambda x: x.score)
 
     def schedule_topics(self) -> None:
         # calcuates each topics score
@@ -36,7 +32,8 @@ class TopicIterator():
         # sorts the topics ascending by score
         self.topics.sort(key=lambda x: x.score)
 
-    def close_scheduler(self) -> None:
+    def save_scheduler(self) -> None:
+        x.topics.sort(key=lambda x: x.score)
         with open(f"../data/{self.name}/{self.calender}/topics.pkl", "wb") as f:
             pickle.dump(self.topics, f)
 
@@ -50,11 +47,14 @@ class TopicIterator():
 if __name__ == "__main__":
     x: TopicIterator = TopicIterator("noel", "GCSEs")
 
-    x.add_new_topics()
     x.schedule_topics()
+    while input("Add New Topics [Y/N]") == "Y":
+        n: str = input("Enter New Topic Name::")
+        d: float = float(input("Enter New Topic Difficulty::"))
+        x.add_new_topics(n, d)
+
     cont: bool = input("Enter Y to display first topic [Y/N]") == "Y"
     for topic in x.topics:
-
 
         if not (cont):
             break
@@ -63,7 +63,7 @@ if __name__ == "__main__":
         input("finished")
         topic.revise(float(input("New Difficulty 1-10 (10=easy):\n")))
         cont = input("Enter Y to display next topic [Y/N]") == "Y"
-    x.topics.sort(key=lambda x: x.score)
+
 
     input("close [ENTER]")
-    x.close_scheduler()
+    x.save_scheduler()
